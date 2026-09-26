@@ -1,0 +1,25 @@
+name: Check Ucrania 2 charger
+
+on:
+  schedule:
+    - cron: '3-59/5 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+concurrency:
+  group: ucrania-2-monitor
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check status and send change alerts
+        env:
+          MONITOR_TOKEN: ${{ secrets.MONITOR_TOKEN }}
+        run: |
+          curl --fail-with-body --silent --show-error --retry 2 --retry-delay 10 \
+            --connect-timeout 10 --max-time 30 --request POST \
+            --header "Authorization: Bearer $MONITOR_TOKEN" \
+            https://ucrania-2-cargador.rafamoreno.chatgpt.site/api/monitor
