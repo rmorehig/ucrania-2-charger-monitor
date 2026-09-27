@@ -2,8 +2,8 @@
 
 This repository runs background checks for the public [Calle Ucrania 2 charger status site](https://ucrania-2-cargador.rafamoreno.chatgpt.site/). The site stores browser push subscriptions and sends a notification when either connector changes its reported state.
 
-- `check-charger.yml` calls the site's authenticated monitor endpoint every five minutes and can be run manually.
-- `keep-schedule-active.yml` makes a monthly repository commit so GitHub does not disable scheduled workflows for repository inactivity.
-- `MONITOR_TOKEN` is a GitHub Actions secret and a matching Sites runtime secret. It is never stored in this repository.
+- `cloudflare/` contains a Durable Object alarm that calls the authenticated monitor endpoint every 30 seconds. A one-minute Cron Trigger restarts the alarm if it stops.
+- `check-charger.yml` is a manual fallback check; GitHub's unreliable schedule is disabled.
+- `MONITOR_TOKEN` is stored as a Cloudflare Worker secret, a Sites runtime secret, and a GitHub Actions secret. It is never stored in this repository.
 
-GitHub may delay or skip scheduled runs. A change that happens and reverses between checks may not be observed.
+The site refreshes every 30 seconds while open. A change that happens and reverses between background checks may not be observed, and delivery depends on each browser's push service.
