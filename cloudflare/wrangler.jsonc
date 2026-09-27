@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ucrania-2-charger-poller",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-27",
+  "durable_objects": {
+    "bindings": [{ "name": "POLLER", "class_name": "ChargerPoller" }]
+  },
+  "exports": {
+    "ChargerPoller": { "type": "durable-object", "storage": "sqlite" }
+  },
+  "triggers": { "crons": ["* * * * *"] }
+}
