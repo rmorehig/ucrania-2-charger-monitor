@@ -55,9 +55,15 @@ export class ChargerPoller extends DurableObject {
 
 export default {
   async fetch(request, env) {
-    if (new URL(request.url).pathname !== '/health' || request.method !== 'GET') {
-      return new Response('Not found', { status: 404 });
+    const path = new URL(request.url).pathname;
+    if (path === '/start' && request.method === 'POST') {
+      if (!env.MONITOR_TOKEN || request.headers.get('authorization') !== `Bearer ${env.MONITOR_TOKEN}`) {
+        return new Response('Unauthorized', { status: 401 });
+      }
+      await poller(env).ensureStarted();
+      return Response.json(await poller(env).health(), { headers: { 'cache-control': 'no-store' } });
     }
+    if (path !== '/health' || request.method !== 'GET') return new Response('Not found', { status: 404 });
     const state = await poller(env).health();
     return Response.json(state, { headers: { 'cache-control': 'no-store' } });
   },
