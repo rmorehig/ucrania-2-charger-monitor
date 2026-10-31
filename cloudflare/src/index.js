@@ -1,7 +1,7 @@
 import { DurableObject } from 'cloudflare:workers';
 
 const SITE_ORIGIN = 'https://ucrania-2-cargador.rafamoreno.chatgpt.site';
-const INTERVAL_MS = 30_000;
+const INTERVAL_MS = 5_000;
 
 function poller(env) {
   return env.POLLER.getByName('ucrania-2');
@@ -49,7 +49,7 @@ export class ChargerPoller extends DurableObject {
       this.ctx.storage.get('lastSuccess'),
       this.ctx.storage.get('lastError'),
     ]);
-    return { intervalSeconds: 30, nextAlarmAt: nextAlarmAt ? new Date(nextAlarmAt).toISOString() : null, lastSuccess: lastSuccess || null, lastError: lastError || null };
+    return { intervalSeconds: INTERVAL_MS / 1000, nextAlarmAt: nextAlarmAt ? new Date(nextAlarmAt).toISOString() : null, lastSuccess: lastSuccess || null, lastError: lastError || null };
   }
 }
 

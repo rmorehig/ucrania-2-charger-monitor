@@ -1,7 +1,7 @@
 {
   "name": "ucrania-2-charger-poller",
   "version": "1.0.0",
-  "description": "Thirty-second charger status monitor",
+  "description": "Five-second charger status monitor",
   "scripts": {
     "check": "node --check src/index.js && wrangler deploy --dry-run"
   },
